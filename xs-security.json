@@ -1,0 +1,12 @@
+{
+  "xsappname": "cap-node",
+  "tenant-mode": "dedicated",
+  "oauth2-configuration": {
+    "redirect-uris": [
+      "http://localhost:5002/"
+    ]
+  },
+  "scopes": [],
+  "attributes": [],
+  "role-templates": []
+}

@@ -1,0 +1,65 @@
+{
+  "name": "cap-node",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@cap-js-community/odata-v2-adapter": "^1.12.3",
+    "@sap-cloud-sdk/resilience": "^3.11.0",
+    "@sap/cds": "^7",
+    "@sap/cds-hana": "^2",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "jwt-decode": "^4.0.0",
+    "passport": "^0"
+  },
+  "devDependencies": {
+    "@sap-cloud-sdk/openapi-generator": "^3.11.0",
+    "@sap/cds-dk": "^7",
+    "@sap/ux-specification": "^1.120.4",
+    "rimraf": "^3.0.2",
+    "sqlite3": "^5"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "undeploy": "cf undeploy cap-node --delete-services --delete-service-keys --delete-service-brokers",
+    "build": "rimraf resources mta_archives && mbt build --mtar archive",
+    "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
+    "watch-order_list": "cds watch --open order_list/webapp/index.html?sap-ui-xx-viewCache=false"
+  },
+  "cds": {
+    "requires": {
+      "destinations": true,
+      "db": "sqlite",
+      "auth": "dummy",
+      "Cloud.Foundry.Producer.API": {
+        "kind": "odata",
+        "model": "srv/external/cf_producer_api",
+        "credentials": {
+          "path": "/cf/producer/v1/resource-events",
+          "destination": "ans_test"
+        }
+      },
+      "[production]": {
+        "db": "hana",
+        "auth": "xsuaa"
+      },
+      "[hybrid]": {
+        "auth": "xsuaa",
+        "xsuaa_api": {
+          "kind": "rest",
+          "credentials": {
+            "url": "<from XSUAA service binding>",
+            "forwardAuthToken": true
+          }
+        }
+      }
+    }
+  },
+  "sapux": [
+    "app/catalog_list_v4",
+    "app/order_list"
+  ]
+}

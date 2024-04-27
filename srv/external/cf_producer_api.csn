@@ -1,0 +1,205 @@
+{
+ "definitions": {
+  "Cloud.Foundry.Producer.API": {
+   "kind": "service",
+   "@Capabilities.BatchSupported": false,
+   "@Capabilities.KeyAsSegmentSupported": true,
+   "@Core.Description": "Cloud Foundry Producer API",
+   "@Core.SchemaVersion": "v1",
+   "@Core.LongDescription": "Use the Alert Notification Producer API as a means to post custom events regarding your application. Those events could be the reflection of important to the business and operations things that happen within the application.\n\nIn Alert Notification, events are divided in three categories:\n* Alert\n* Notification\n* Exception\n\nIn addition, severity and priority can be adjusted according to your needs. Take a look in the model tab of the post request where all possible properties for the event description are listed. Alert Notification gives you the option to extend those properties if needed by adding your own tags in the tags object at the end."
+  },
+  "Cloud.Foundry.Producer.API.cf_producer_v1_resource_events_post": {
+   "kind": "action",
+   "params": {
+    "body": {
+     "type": "Cloud.Foundry.Producer.API_types.CustomerResourceEvent",
+     "@openapi.in": "body"
+    }
+   },
+   "@Common.Label": "Resource Events",
+   "@Core.Description": "Post an event to stay informed whenever something important happens in your application",
+   "@Core.LongDescription": "Use this endpoint to post an event regarding any of your applications. You can post just a single event or also you have the possibility to create a chain of stateful events using the special \"ans:\" prefixed tags. Once the event is received by Alert Notification, it is delivered to each channel you have already defined - e-mail, Slack, webhook, etc.",
+   "@openapi.path": "/cf/producer/v1/resource-events",
+   "returns": {
+    "type": "Cloud.Foundry.Producer.API_types.CustomerResourceEvent"
+   }
+  },
+  "Cloud.Foundry.Producer.API.cf_producer_v1_resource_events_batch_post": {
+   "kind": "action",
+   "params": {
+    "body": {
+     "items": {
+      "type": "Cloud.Foundry.Producer.API_types.CustomerResourceEvent"
+     },
+     "@openapi.in": "body"
+    }
+   },
+   "@Common.Label": "Resource Events Batch",
+   "@Core.Description": "Post events to stay informed whenever something important happens in your application",
+   "@Core.LongDescription": "Use this endpoint to post events regarding any of your applications. You can post a list that contains multiple events. You can also create a chain of stateful events by using the special \"ans:\" prefixed tags. Once the event is received by Alert Notification, it is delivered to each channel that you have already defined. For example, e-mail, Slack, webhook, and so on.",
+   "@openapi.path": "/cf/producer/v1/resource-events-batch",
+   "returns": {
+    "items": {
+     "type": "Cloud.Foundry.Producer.API_types.CustomerResourceEvent"
+    }
+   }
+  },
+  "Cloud.Foundry.Producer.API_types.CustomerResourceEvent": {
+   "@title": "CustomerResourceEvent",
+   "@description": "**Note:** Properties like region, globalAccount, subAccount and resourceGroup are filled automatically by Alert Notification.",
+   "elements": {
+    "id": {
+     "@description": "ID generated on an acceptance criterion by the service. It is used for traceability of the event status.",
+     "type": "cds.String"
+    },
+    "eventType": {
+     "@description": "Identifies the cause of an alert in the context of an affected resource. For example: HighCpuUsage, NotWorkingExternalDependency. The types must be meaningful for the user and should distinguish the event.",
+     "type": "cds.String"
+    },
+    "eventTimestamp": {
+     "@description": "The timestamp that specifies when the event was created in the source. This property uses the Unix timestamp format (seconds since January 1st, 1970 at UTC)",
+     "type": "cds.Integer64"
+    },
+    "severity": {
+     "@description": "Represents the event impact in the context of the affected resource. The possible values are (from low to high level of impact) - \"INFO\", \"NOTICE\", \"WARNING\", \"ERROR\", \"FATAL\".",
+     "type": "cds.String",
+     "@assert.range": true,
+     "enum": {
+      "INFO": {},
+      "NOTICE": {},
+      "WARNING": {},
+      "ERROR": {},
+      "FATAL": {}
+     }
+    },
+    "category": {
+     "@description": "A property that identifies the category of the event. Common use cases for the possible values are: \nALERT - when the problem does not impact the workflow of the resource, but for example impacts its performance. It could be related to a resource dependency, which might be source of the problem.\nNOTIFICATION - contains useful information about the state of the resource or its dependencies. For example, this can be an update, a planned downtime taking place, and so on. \nEXCEPTION - when the problem is related to some abnormal worklfow in the resource.",
+     "type": "cds.String",
+     "@assert.range": true,
+     "enum": {
+      "ALERT": {},
+      "NOTIFICATION": {},
+      "EXCEPTION": {}
+     }
+    },
+    "subject": {
+     "@description": "A meaningful title, which would be used as an email subject, an issue title, and so on.",
+     "type": "cds.String"
+    },
+    "body": {
+     "@description": "A meaningful description of the alert with sufficient details, which would be used as an email body, an issue content, and so on.",
+     "type": "cds.String"
+    },
+    "priority": {
+     "@description": "An optional property that defines the event urgency. The lower the number, the higher the priority, and the sooner the event should be reviewed.",
+     "type": "cds.Integer"
+    },
+    "tags": {
+     "@description": "Optional key-value pairs describing the event in details. It can be used for filtering purposes. Also it can contain special key-value pairs.\n\nGeneral key-value pairs (All other tags with prefix 'ans:' will be ignored when event is delivered):\n- ans:correlationId: Can be used by the sender in order to correlate this event with other activities or issues\n- ans:sapPassport: Used for correlation between different SAP systems that support SAP-PASSPORT\n- ans:sourceEventId: An ID generated by the event source. It would be used for incidents management and further stateful interactions. That is, actions on consequent events with the same ID will be related if applicable.\n- ans:status: An optional property that could be used to change statuses in incidents management systems. Enum values: 'CREATE_OR_UPDATE', 'CREATE', 'UPDATE', 'COMMENT' or 'CLOSE'.\n- ans:detailsLink: A URL that contains details for this alert to a system of your choosing. Can be link to your preferred dashboard, the Kibana data visualization plugin, the Dynatrace performance management tool, and others.\n- ans:recommendedActionLink: A URL that contains details for recommended actions regarding this alert to a system of your choosing.",
+     "elements": {}
+    },
+    "resource": {
+     "type": "Cloud.Foundry.Producer.API_types.AffectedCustomerResource"
+    }
+   },
+   "kind": "type"
+  },
+  "Cloud.Foundry.Producer.API_types.AffectedCustomerResource": {
+   "@title": "AffectedCustomerResource",
+   "@description": "Used to uniquely identify a resource in the SAP Business Technology Platform for which this event was created. The user can filter these properties. \n\n**Note:** Properties such as globalAccount, subAccount and resourceGroup are filled automatically by Alert Notification.",
+   "elements": {
+    "resourceName": {
+     "@description": "A unique resource name used to identify an application or a back-end service, such as a database. For example: application-name, database-alias",
+     "type": "cds.String"
+    },
+    "resourceType": {
+     "@description": "Identifies the affected resource type. For example: application, database, dbms, service",
+     "type": "cds.String"
+    },
+    "resourceInstance": {
+     "@description": "If the resource has multiple instances, the exact instance will be identified.",
+     "type": "cds.String"
+    },
+    "tags": {
+     "@description": "Optional key-value pairs describing in details the resource. Can be used for filtering.",
+     "elements": {}
+    }
+   },
+   "kind": "type"
+  },
+  "Cloud.Foundry.Producer.API_types.CustomerProducerUnauthorizedApiError": {
+   "@title": "CustomerProducerUnauthorizedApiError",
+   "elements": {
+    "status": {
+     "type": "cds.Integer"
+    },
+    "message": {
+     "type": "cds.String"
+    },
+    "timestamp": {
+     "type": "cds.Integer"
+    },
+    "path": {
+     "type": "cds.String"
+    },
+    "error": {
+     "type": "cds.String"
+    }
+   },
+   "kind": "type"
+  },
+  "Cloud.Foundry.Producer.API_types.CustomerProducerApiError": {
+   "@title": "CustomerProducerApiError",
+   "elements": {
+    "code": {
+     "type": "cds.Integer"
+    },
+    "message": {
+     "type": "cds.String"
+    }
+   },
+   "kind": "type"
+  },
+  "Cloud.Foundry.Producer.API_types.TooManyRequestsApiError": {
+   "@title": "CustomerProducerTooManyRequestsApiError",
+   "elements": {
+    "code": {
+     "type": "cds.Integer"
+    },
+    "message": {
+     "type": "cds.String",
+     "@Core.Example.$Type": "Core.PrimitiveExampleValue",
+     "@Core.Example.Value": "API request quota exceeded. Allowed total attempts number of {requests} per {time-frame}."
+    }
+   },
+   "kind": "type"
+  },
+  "Cloud.Foundry.Producer.API_types.BatchProducerApiError": {
+   "@title": "BatchProducerApiError",
+   "elements": {
+    "accepted": {
+     "@description": "Events that are ingested into the system for further processing. To receive such events, subscription have to be configured.",
+     "items": {
+      "type": "Cloud.Foundry.Producer.API_types.CustomerResourceEvent"
+     }
+    },
+    "rejected": {
+     "@description": "Any provided event that has not been ingested into the system for further processing.",
+     "items": {
+      "type": "Cloud.Foundry.Producer.API_types.CustomerResourceEvent"
+     }
+    },
+    "code": {
+     "type": "cds.Integer"
+    },
+    "message": {
+     "type": "cds.String"
+    }
+   },
+   "kind": "type"
+  }
+ },
+ "meta": {
+  "creator": "cds-import-openapi"
+ }
+}
