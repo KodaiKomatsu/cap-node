@@ -18,7 +18,7 @@
   "devDependencies": {
     "@sap-cloud-sdk/openapi-generator": "^3.11.0",
     "@sap/cds-dk": "^7",
-    "@sap/ux-specification": "^1.120.4",
+    "@sap/ux-specification": "^1.120.8",
     "rimraf": "^3.0.2",
     "sqlite3": "^5"
   },
@@ -27,7 +27,8 @@
     "undeploy": "cf undeploy cap-node --delete-services --delete-service-keys --delete-service-brokers",
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
-    "watch-order_list": "cds watch --open order_list/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-order_list": "cds watch --open order_list/webapp/index.html?sap-ui-xx-viewCache=false",
+    "watch-bp_list": "cds watch --open bp_list/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "cds": {
     "requires": {
@@ -60,6 +61,7 @@
   },
   "sapux": [
     "app/catalog_list_v4",
-    "app/order_list"
+    "app/order_list",
+    "app/bp_list"
   ]
 }
