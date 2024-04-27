@@ -2,6 +2,10 @@ const cds = require('@sap/cds')
 
 module.exports = async function () {
 
+    this.before('READ', 'BusinessPartners', async (req) => {
+        console.log("READ Business Partners")
+    })
+
     // const api = 'xsuaa_api';
     // const xsuaa_bind = JSON.parse(process.env.VCAP_SERVICES).xsuaa[0];
     // const api_def = cds.env.requires[api];
