@@ -10,6 +10,10 @@ module.exports = async function () {
         console.log("CREATE Business Partners")
     })
 
+    this.before('DELETE', 'BusinessPartners', async (req) => {
+        console.log("DELETE Business Partners")
+    })
+
     // const api = 'xsuaa_api';
     // const xsuaa_bind = JSON.parse(process.env.VCAP_SERVICES).xsuaa[0];
     // const api_def = cds.env.requires[api];
