@@ -43,4 +43,23 @@ describe('Service Level Test', ()=>{
             "Title": ""
         })
     })
+
+    it ('Admin Service function getContactList Test', async () => {
+        const { data } = await GET ('/odata/v4/ext/ContactSet')
+        expect(data.value[0]).to.eql({
+            "BusinessPartnerID": "0100000000",
+            "Title": "",
+            "FirstName": "Karl",
+            "MiddleName": "",
+            "LastName": "Müller",
+            "Nickname": "",
+            "Initials": "",
+            "Sex": "M",
+            "PhoneNumber": "0622734567",
+            "FaxNumber": "0622734004",
+            "EmailAddress": "customer-do.not.reply@sap.com",
+            "Language": "EN",
+            "DateOfBirth": null
+        })
+    })
 })
