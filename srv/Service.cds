@@ -1,5 +1,7 @@
 using db from '../db/schema';
 
+using { GWSAMPLE_BASIC as external } from './external/GWSAMPLE_BASIC';
+
 // @odata.draft.enabled
 service AdminService {
 
@@ -39,3 +41,19 @@ service AdminService {
 annotate AdminService.Catalogs with {
     Orders @Common.DefaultValuesFunction: 'Catalogs_setOrdersDefaultValues';
 };
+
+service ExtService {
+
+    entity ProductSet as projection on external.ProductSet;
+
+    entity BusinessPartnerSet as projection on external.BusinessPartnerSet excluding {
+        Address
+    };
+
+    entity ContactSet as projection on external.ContactSet excluding {
+        Address,
+        ContactGuid
+    };
+    function getContactList() returns array of ContactSet;
+
+}

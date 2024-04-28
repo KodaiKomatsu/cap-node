@@ -14,6 +14,23 @@ module.exports = async function () {
         console.log("DELETE Business Partners")
     })
 
+    this.on('READ', 'ProductSet', async(req, res) => {
+        const ext = await cds.connect.to('GWSAMPLE_BASIC');
+        return await ext.run(req.query);
+    })
+
+    this.on('READ', 'BusinessPartnerSet', async(req, res) => {
+        const ext = await cds.connect.to('GWSAMPLE_BASIC');
+        return await ext.run(req.query);
+    })
+
+    this.on('getContactList', async (req, res) => {
+        const ext = await cds.connect.to('GWSAMPLE_BASIC');
+        const { ContactSet } = ext.entities;
+        const result = await ext.run(SELECT.from(ContactSet).columns("BusinessPartnerID", "Title", "FirstName", "MiddleName", "LastName", "Nickname", "Initials", "Sex", "PhoneNumber", "FaxNumber", "EmailAddress", "Language", "DateOfBirth"))
+        return result;
+    })
+
     // const api = 'xsuaa_api';
     // const xsuaa_bind = JSON.parse(process.env.VCAP_SERVICES).xsuaa[0];
     // const api_def = cds.env.requires[api];

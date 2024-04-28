@@ -11,7 +11,11 @@
     "@sap/cds": "^7",
     "@sap/cds-hana": "^2",
     "@sap/xssec": "^3",
+    "chai": "^4.4.1",
+    "chai-as-promised": "^7.1.1",
+    "chai-subset": "^1.6.0",
     "express": "^4",
+    "jest": "^29.7.0",
     "jwt-decode": "^4.0.0",
     "passport": "^0"
   },
@@ -28,7 +32,9 @@
     "build": "rimraf resources mta_archives && mbt build --mtar archive",
     "deploy": "cf deploy mta_archives/archive.mtar --retries 1",
     "watch-order_list": "cds watch --open order_list/webapp/index.html?sap-ui-xx-viewCache=false",
-    "watch-bp_list": "cds watch --open bp_list/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-bp_list": "cds watch --open bp_list/webapp/index.html?sap-ui-xx-viewCache=false",
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
   "cds": {
     "requires": {
@@ -55,6 +61,14 @@
             "url": "<from XSUAA service binding>",
             "forwardAuthToken": true
           }
+        }
+      },
+      "GWSAMPLE_BASIC": {
+        "kind": "odata-v2",
+        "model": "srv/external/GWSAMPLE_BASIC",
+        "credentials": {
+          "url": "https://sapes5.sapdevcenter.com/sap/opu/odata/IWBEP/GWSAMPLE_BASIC/",
+          "authentication": "BasicAuthentication"
         }
       }
     }
