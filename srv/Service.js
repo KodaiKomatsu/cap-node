@@ -24,6 +24,11 @@ module.exports = async function () {
         return await ext.run(req.query);
     })
 
+    this.on('READ', 'ContactSet', async(req, res) => {
+        const ext = await cds.connect.to('GWSAMPLE_BASIC');
+        return await ext.run(req.query);
+    })
+
     this.on('getContactList', async (req, res) => {
         const ext = await cds.connect.to('GWSAMPLE_BASIC');
         const { ContactSet } = ext.entities;
